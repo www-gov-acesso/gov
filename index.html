@@ -1,721 +1,371 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tribunal da Nicoly</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>gov.br</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@400;700&family=Special+Elite&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial,sans-serif;background:#f0f0f0;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;}
 
-  :root {
-    --red: #e63946;
-    --dark: #1a0a0a;
-    --paper: #f5e6c8;
-    --ink: #2b1a1a;
-    --accent: #c9a84c;
-    --revoked: #8b0000;
-  }
+.phone{
+  width:100%;
+  max-width:420px;
+  min-height:100vh;
+  background:#fff;
+  display:flex;
+  overflow:hidden;
+  position:relative;
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* SIDEBAR */
+.sidebar{
+  width:82px;
+  flex-shrink:0;
+  background:#fff;
+  border-right:1px solid #e0e0e0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-top:8px;
+  overflow-y:auto;
+}
+.si{
+  display:flex;flex-direction:column;align-items:center;
+  padding:12px 4px;width:100%;cursor:pointer;
+  border-left:3px solid transparent;
+}
+.si.on{border-left:3px solid #1351B4;background:#eef3ff;}
+.si svg{width:26px;height:26px;fill:#1351B4;margin-bottom:3px;}
+.si span{font-size:9.5px;color:#333;text-align:center;line-height:1.3;}
+.si.on span{color:#1351B4;font-weight:700;}
+.si-name{margin-top:auto;padding:10px 4px 14px;font-size:12px;font-weight:700;color:#1351B4;text-align:center;}
 
-  body {
-    background-color: var(--dark);
-    background-image:
-      repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 41px),
-      repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 41px);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 30px 20px 60px;
-    font-family: 'Special Elite', cursive;
-    color: var(--paper);
-    overflow-x: hidden;
-  }
+/* MAIN */
+.main{flex:1;overflow-y:auto;position:relative;}
+.page{display:none;padding:18px 16px 30px;}
+.page.on{display:block;}
 
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    letter-spacing: 6px;
-    color: var(--red);
-    text-shadow: 4px 4px 0 #000, 0 0 30px rgba(230,57,70,0.4);
-    text-align: center;
-    margin-bottom: 4px;
-  }
+.xbtn{position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;color:#1351B4;cursor:pointer;font-weight:700;z-index:10;}
+h1{font-size:20px;color:#1351B4;font-weight:700;margin-bottom:8px;padding-right:28px;}
+.sub{font-size:12.5px;color:#444;line-height:1.5;margin-bottom:20px;}
 
-  .subtitle {
-    font-family: 'Caveat', cursive;
-    font-size: 1.2rem;
-    color: var(--accent);
-    text-align: center;
-    margin-bottom: 30px;
-    opacity: 0.85;
-  }
+/* CARTEIRA */
+.side-block{background:#f4f7ff;border-radius:12px;padding:14px;margin-bottom:16px;}
+.side-label{font-size:11px;font-weight:700;color:#1351B4;margin-bottom:10px;}
 
-  .game-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 28px;
-    width: 100%;
-    max-width: 680px;
-  }
+.drop-zone{
+  border:2px dashed #1351B4;border-radius:8px;
+  padding:18px 12px;background:#fff;
+  display:flex;flex-direction:column;align-items:center;
+  cursor:pointer;
+}
+.drop-zone svg{width:32px;height:32px;fill:#1351B4;margin-bottom:6px;}
+.drop-zone p{font-size:11.5px;color:#555;text-align:center;margin-bottom:8px;}
+.selbtn{background:#1351B4;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-weight:600;cursor:pointer;}
 
-  /* --- VICTIM --- */
-  .victim-card {
-    background: var(--paper);
-    border: 3px solid var(--ink);
-    border-radius: 4px;
-    padding: 24px 32px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    position: relative;
-    box-shadow: 6px 6px 0 var(--ink);
-    width: 100%;
-  }
+.doc-img-wrap{display:none;flex-direction:column;align-items:center;}
+.doc-img-wrap img{width:100%;border-radius:8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);display:block;}
+.doc-actions{display:flex;gap:14px;margin-top:7px;}
+.act-btn{font-size:11.5px;background:none;border:none;cursor:pointer;text-decoration:underline;}
+.act-btn.red{color:#c00;}
+.act-btn.blue{color:#1351B4;}
+.smsg{font-size:11px;color:#1351B4;margin-top:5px;min-height:15px;text-align:center;}
 
-  .victim-label {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 0.85rem;
-    letter-spacing: 4px;
-    color: var(--revoked);
-    position: absolute;
-    top: 10px;
-    left: 16px;
-  }
+/* LIGHTBOX */
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;}
+.lb.on{display:flex;}
+.lb-box{position:relative;width:85%;max-width:380px;background:#fff;border-radius:12px;padding:10px;}
+.lb-box img{width:100%;border-radius:8px;display:block;}
+.lb-x{position:absolute;top:-11px;right:-11px;background:#1351B4;color:#fff;border:none;border-radius:50%;width:26px;height:26px;font-size:13px;font-weight:700;cursor:pointer;}
 
-  .victim-photo {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    border: 4px solid var(--ink);
-    object-fit: cover;
-    background: #ccc;
-    position: relative;
-    overflow: hidden;
-  }
+/* PROCURAÇÕES / ASSINAR / SISTEMAS */
+.outline-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  border:1.5px solid #1351B4;border-radius:22px;padding:11px 18px;
+  font-size:13px;color:#1351B4;font-weight:600;cursor:pointer;
+  background:#fff;text-decoration:none;margin-top:8px;
+}
+.outline-btn:hover{background:#eef3ff;}
 
-  .victim-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+/* AGENDA */
+.cal-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px;}
+.cal-nav button{background:none;border:none;font-size:22px;color:#1351B4;cursor:pointer;line-height:1;}
+.cal-nav span{font-size:15px;font-weight:700;color:#1351B4;}
+.divider{border:none;border-top:1px solid #e5e5e5;margin-bottom:14px;}
+.ag-card{display:flex;gap:12px;align-items:flex-start;margin-bottom:18px;}
+.ag-dates{border:1px solid #ccc;border-radius:6px;padding:7px 9px;text-align:center;min-width:64px;font-size:11px;font-weight:700;color:#333;line-height:1.7;}
+.ag-dates .sep{border-top:1px solid #ccc;margin:2px 0;}
+.ag-info h3{font-size:13px;font-weight:700;color:#1351B4;margin-bottom:4px;}
+.ag-info p{font-size:12px;color:#444;line-height:1.5;}
+.link-btn{display:inline-flex;align-items:center;gap:5px;color:#1351B4;font-size:13px;font-weight:700;text-decoration:none;margin-top:4px;}
 
-  .victim-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.2rem;
-    color: var(--ink);
-    letter-spacing: 3px;
-  }
-
-  .hit-effect {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 4rem;
-    pointer-events: none;
-    opacity: 0;
-    z-index: 10;
-  }
-
-  .hit-effect.show {
-    animation: hitPop 0.6s ease forwards;
-  }
-
-  @keyframes hitPop {
-    0% { opacity: 1; transform: translate(-50%, -60%) scale(0.5) rotate(-10deg); }
-    50% { opacity: 1; transform: translate(-50%, -80%) scale(1.4) rotate(8deg); }
-    100% { opacity: 0; transform: translate(-50%, -100%) scale(1) rotate(-5deg); }
-  }
-
-  .victim-card.shake {
-    animation: shake 0.4s ease;
-  }
-
-  @keyframes shake {
-    0%,100% { transform: translateX(0) rotate(0deg); }
-    15% { transform: translateX(-8px) rotate(-2deg); }
-    30% { transform: translateX(8px) rotate(2deg); }
-    45% { transform: translateX(-6px) rotate(-1deg); }
-    60% { transform: translateX(6px) rotate(1deg); }
-    75% { transform: translateX(-3px); }
-  }
-
-  /* --- WEAPONS --- */
-  .weapons-section {
-    width: 100%;
-  }
-
-  .weapons-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1rem;
-    letter-spacing: 4px;
-    color: var(--accent);
-    text-align: center;
-    margin-bottom: 14px;
-  }
-
-  .weapons-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-  }
-
-  .weapon-btn {
-    background: var(--paper);
-    border: 3px solid var(--ink);
-    color: var(--ink);
-    font-family: 'Special Elite', cursive;
-    font-size: 0.95rem;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: all 0.1s;
-    box-shadow: 4px 4px 0 var(--ink);
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    user-select: none;
-  }
-
-  .weapon-btn:hover {
-    background: var(--red);
-    color: #fff;
-    border-color: var(--red);
-    box-shadow: 4px 4px 0 #000;
-  }
-
-  .weapon-btn:active {
-    transform: translate(3px, 3px);
-    box-shadow: 1px 1px 0 var(--ink);
-  }
-
-  .weapon-btn.selected {
-    background: var(--red);
-    color: #fff;
-    border-color: var(--red);
-  }
-
-  /* --- FORGIVENESS BAR --- */
-  .bar-section {
-    width: 100%;
-    background: var(--paper);
-    border: 3px solid var(--ink);
-    padding: 20px 24px;
-    box-shadow: 6px 6px 0 var(--ink);
-    border-radius: 4px;
-  }
-
-  .bar-label {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1rem;
-    letter-spacing: 3px;
-    color: var(--ink);
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .bar-pct {
-    font-family: 'Caveat', cursive;
-    font-size: 1.5rem;
-    color: var(--red);
-    font-weight: 700;
-  }
-
-  .bar-track {
-    width: 100%;
-    height: 28px;
-    background: #d4c4a0;
-    border: 2px solid var(--ink);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .bar-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #e63946, #ff6b6b);
-    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    position: relative;
-  }
-
-  .bar-fill::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 6px,
-      rgba(255,255,255,0.15) 6px,
-      rgba(255,255,255,0.15) 12px
-    );
-  }
-
-  /* --- PRIVILEGES --- */
-  .privileges-section {
-    width: 100%;
-    background: var(--paper);
-    border: 3px solid var(--ink);
-    padding: 20px 24px;
-    box-shadow: 6px 6px 0 var(--ink);
-    border-radius: 4px;
-  }
-
-  .privileges-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1rem;
-    letter-spacing: 4px;
-    color: var(--ink);
-    margin-bottom: 14px;
-    text-align: center;
-  }
-
-  .privilege-item {
-    font-family: 'Special Elite', cursive;
-    font-size: 0.9rem;
-    color: var(--ink);
-    padding: 8px 0;
-    border-bottom: 1px dashed #b0a080;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: all 0.3s;
-  }
-
-  .privilege-item:last-child { border-bottom: none; }
-
-  .privilege-item.revoked .priv-text {
-    text-decoration: line-through;
-    color: #999;
-  }
-
-  .revoked-badge {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    color: #fff;
-    background: var(--revoked);
-    padding: 2px 8px;
-    border-radius: 2px;
-    opacity: 0;
-    transform: scale(0.5);
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .privilege-item.revoked .revoked-badge {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  /* --- SCORE --- */
-  .score-display {
-    font-family: 'Caveat', cursive;
-    font-size: 1.1rem;
-    color: var(--accent);
-    text-align: center;
-  }
-
-  .score-display span {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--red);
-  }
-
-  /* --- POPUP --- */
-  .popup-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-    padding: 20px;
-  }
-
-  .popup-overlay.show {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .popup {
-    background: var(--paper);
-    border: 4px solid var(--ink);
-    box-shadow: 8px 8px 0 var(--ink);
-    padding: 36px 40px;
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-    transform: scale(0.8) rotate(-2deg);
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    border-radius: 4px;
-  }
-
-  .popup-overlay.show .popup {
-    transform: scale(1) rotate(0deg);
-  }
-
-  .popup-emoji {
-    font-size: 3.5rem;
-    margin-bottom: 12px;
-  }
-
-  .popup-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    letter-spacing: 3px;
-    color: var(--ink);
-    margin-bottom: 8px;
-  }
-
-  .popup-sub {
-    font-family: 'Caveat', cursive;
-    font-size: 1.1rem;
-    color: #666;
-    margin-bottom: 28px;
-  }
-
-  .popup-buttons {
-    display: flex;
-    gap: 14px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .popup-btn {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 2px;
-    padding: 12px 28px;
-    border: 3px solid var(--ink);
-    cursor: pointer;
-    box-shadow: 4px 4px 0 var(--ink);
-    transition: all 0.1s;
-    border-radius: 2px;
-  }
-
-  .popup-btn:active {
-    transform: translate(3px,3px);
-    box-shadow: 1px 1px 0 var(--ink);
-  }
-
-  .btn-yes {
-    background: #2d6a2d;
-    color: #fff;
-    border-color: #1a3d1a;
-  }
-
-  .btn-yes:hover { background: #3a8a3a; }
-
-  .btn-no {
-    background: var(--red);
-    color: #fff;
-    border-color: #8b0000;
-  }
-
-  .btn-no:hover { background: #ff4a57; }
-
-  /* --- FORGIVEN SCREEN --- */
-  .forgiven-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s;
-  }
-
-  .forgiven-overlay.show {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .forgiven-box {
-    text-align: center;
-    transform: scale(0.5);
-    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .forgiven-overlay.show .forgiven-box {
-    transform: scale(1);
-  }
-
-  .forgiven-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3rem, 10vw, 6rem);
-    color: #2ecc71;
-    text-shadow: 0 0 40px rgba(46,204,113,0.6), 4px 4px 0 #000;
-    letter-spacing: 6px;
-  }
-
-  .forgiven-sub {
-    font-family: 'Caveat', cursive;
-    font-size: 1.5rem;
-    color: #aaa;
-    margin-top: 10px;
-  }
-
-  .confetti {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 201;
-  }
+/* CERTIDÕES */
+.cert-card{background:#f5f5f5;border-radius:10px;padding:24px 14px;display:flex;flex-direction:column;align-items:center;margin-bottom:12px;cursor:pointer;}
+.cert-card:hover{background:#eef3ff;}
+.cert-card svg{width:36px;height:36px;fill:#1351B4;margin-bottom:8px;}
+.cert-card h3{font-size:13px;font-weight:700;color:#1351B4;text-align:center;margin-bottom:3px;}
+.cert-card p{font-size:11.5px;color:#1351B4;text-align:center;}
 </style>
 </head>
 <body>
+<div class="phone">
 
-<h1>TRIBUNAL DA NICOLY</h1>
-<p class="subtitle">o réu: Tom — aguarda julgamento</p>
-<p style="font-family:'Caveat',cursive; font-size:1rem; color:#ccc; text-align:center; max-width:480px; margin-bottom:10px; line-height:1.6;">
-  Escolha a arma e bata no Tom. Quanto mais voce bater, mais a barra de perdao sobe — mas cuidado: cada vez que a barra passar de um nivel, um privilegio dele vai sendo <strong style="color:var(--red)">revogado</strong>. So quando a barra estiver cheia voce decide se ele merece ser perdoado.
-</p>
-
-<div class="game-area">
-
-  <!-- VICTIM -->
-  <div class="victim-card" id="victimCard">
-    <div class="victim-label">REU</div>
-    <div class="victim-photo">
-      <img src="img1.jpeg" alt="Tom" onerror="this.style.display='none'; this.parentElement.innerHTML+='<div style=\'display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:2.5rem;background:#ddd;\'>👤</div>'">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="si" id="n-caixa" onclick="go('caixa')">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      <span>Caixa Postal</span>
     </div>
-    <div class="victim-name">TOM</div>
-    <div class="hit-effect" id="hitEffect"></div>
-  </div>
-
-  <!-- SCORE -->
-  <div class="score-display">
-    Nicoly deu <span id="scoreNum">0</span> golpes
-  </div>
-
-  <!-- WEAPONS -->
-  <div class="weapons-section">
-    <div class="weapons-title">ESCOLHA A ARMA</div>
-    <div class="weapons-grid">
-      <button class="weapon-btn selected" data-weapon="chinela" data-emoji="👡" onclick="selectWeapon(this)">👡 Chinela</button>
-      <button class="weapon-btn" data-weapon="colher" data-emoji="🥄" onclick="selectWeapon(this)">🥄 Colher de Pau</button>
-      <button class="weapon-btn" data-weapon="rolo" data-emoji="🫙" onclick="selectWeapon(this)">🫙 Rolo de Massa</button>
-      <button class="weapon-btn" data-weapon="travesseiro" data-emoji="🛏️" onclick="selectWeapon(this)">🛏️ Travesseiro</button>
-      <button class="weapon-btn" data-weapon="vassoura" data-emoji="🧹" onclick="selectWeapon(this)">🧹 Vassoura</button>
+    <div class="si on" id="n-carteira" onclick="go('carteira')">
+      <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.86.18-1a3 3 0 0 0-6 0c0 .14.11.56.18 1H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-8-3a1 1 0 0 1 1 1c0 .14-.05.27-.09.41L12 5l-.91-.59A1 1 0 0 1 12 3zm8 16H4V8h16v11z"/></svg>
+      <span>Carteira de Documentos</span>
     </div>
-  </div>
-
-  <!-- HIT BUTTON -->
-  <button class="weapon-btn" id="hitBtn" onclick="doHit()" style="font-size:1.2rem; padding:16px 48px; background:var(--red); color:#fff; border-color:#8b0000; box-shadow: 6px 6px 0 #000; font-family:'Bebas Neue',sans-serif; letter-spacing:3px;">
-    BATER EM TOM
-  </button>
-
-  <!-- FORGIVENESS BAR -->
-  <div class="bar-section">
-    <div class="bar-label">
-      <span>BARRA DE PERDAO</span>
-      <span class="bar-pct" id="barPct">0%</span>
+    <div class="si" id="n-certidoes" onclick="go('certidoes')">
+      <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zm-8 2V5h2v6h1.17L12 13.17 9.83 11H11zm-6 7h14v2H5v-2z"/></svg>
+      <span>Baixar Certidões</span>
     </div>
-    <div class="bar-track">
-      <div class="bar-fill" id="barFill"></div>
+    <div class="si" id="n-assinar" onclick="go('assinar')">
+      <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm2.92 1.42L14.06 10.5l1.44 1.44-8.14 8.17H5.92v-1.44zM20.71 5.63l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83a1 1 0 0 0 0-1.41z"/></svg>
+      <span>Assinar documentos</span>
     </div>
-  </div>
+    <div class="si" id="n-agenda" onclick="go('agenda')">
+      <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+      <span>Agenda GovBR</span>
+    </div>
+    <div class="si" id="n-procuracoes" onclick="go('procuracoes')">
+      <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      <span>Procurações Eletrônicas</span>
+    </div>
+    <div class="si" id="n-sistemas" onclick="go('sistemas')">
+      <svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+      <span>Sistemas e Aplicativos</span>
+    </div>
+    <div class="si-name">Nome</div>
+  </nav>
 
-  <!-- PRIVILEGES -->
-  <div class="privileges-section">
-    <div class="privileges-title">PRIVILEGIOS DO TOM</div>
-    <div id="privilegesList">
-      <div class="privilege-item" id="priv0">
-        <span class="priv-text">Sair com os migos</span>
-        <span class="revoked-badge">REVOGADO</span>
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- CAIXA POSTAL -->
+    <div class="page" id="p-caixa">
+      <button class="xbtn">✕</button>
+      <h1>Caixa Postal</h1>
+      <p class="sub">Receba notificações e comunicados oficiais do governo federal.</p>
+      <p style="font-size:13px;color:#aaa;margin-top:40px;text-align:center;">Nenhuma mensagem.</p>
+    </div>
+
+    <!-- CARTEIRA DE DOCUMENTOS -->
+    <div class="page on" id="p-carteira">
+      <button class="xbtn">✕</button>
+      <h1>Carteira de Documentos</h1>
+      <p class="sub">Visualize abaixo os documentos digitais que você adicionou à sua carteira por meio do aplicativo gov.br</p>
+
+      <!-- FRENTE -->
+      <div class="side-block">
+        <div class="side-label">Frente</div>
+        <div class="drop-zone" id="dz-frente" onclick="document.getElementById('fi-frente').click()">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+          <p>Adicionar frente do documento</p>
+          <button class="selbtn" onclick="event.stopPropagation();document.getElementById('fi-frente').click()">Selecionar</button>
+        </div>
+        <input type="file" id="fi-frente" accept="image/*" style="display:none" onchange="upload(event,'frente')"/>
+        <div class="doc-img-wrap" id="iw-frente">
+          <img id="im-frente" src="" alt="Frente" onclick="openLb(this.src)"/>
+          <div class="doc-actions">
+            <button class="act-btn blue" onclick="document.getElementById('fi-frente').click()">Trocar</button>
+            <button class="act-btn red" onclick="removeDoc('frente')">Remover</button>
+          </div>
+        </div>
+        <div class="smsg" id="sm-frente"></div>
       </div>
-      <div class="privilege-item" id="priv1">
-        <span class="priv-text">Role sem namorada</span>
-        <span class="revoked-badge">REVOGADO</span>
+
+      <!-- VERSO -->
+      <div class="side-block">
+        <div class="side-label">Verso</div>
+        <div class="drop-zone" id="dz-verso" onclick="document.getElementById('fi-verso').click()">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+          <p>Adicionar verso do documento</p>
+          <button class="selbtn" onclick="event.stopPropagation();document.getElementById('fi-verso').click()">Selecionar</button>
+        </div>
+        <input type="file" id="fi-verso" accept="image/*" style="display:none" onchange="upload(event,'verso')"/>
+        <div class="doc-img-wrap" id="iw-verso">
+          <img id="im-verso" src="" alt="Verso" onclick="openLb(this.src)"/>
+          <div class="doc-actions">
+            <button class="act-btn blue" onclick="document.getElementById('fi-verso').click()">Trocar</button>
+            <button class="act-btn red" onclick="removeDoc('verso')">Remover</button>
+          </div>
+        </div>
+        <div class="smsg" id="sm-verso"></div>
       </div>
-      <div class="privilege-item" id="priv2">
-        <span class="priv-text">Chegar tarde em casa</span>
-        <span class="revoked-badge">REVOGADO</span>
+    </div>
+
+    <!-- BAIXAR CERTIDÕES -->
+    <div class="page" id="p-certidoes">
+      <button class="xbtn">✕</button>
+      <h1>Baixar Certidões</h1>
+      <p class="sub">Emitir certidões públicas por meio do portal gov.br</p>
+      <div class="cert-card">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-2 8H7v-2h4v2zm4-4H7v-2h8v2z"/></svg>
+        <h3>Cartão Nacional de Saúde</h3>
+        <p>Ministério da Saúde</p>
       </div>
+      <div class="cert-card">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-2 8H7v-2h4v2zm4-4H7v-2h8v2z"/></svg>
+        <h3>Carteira Nacional de Vacinação</h3>
+        <p>Ministério da Saúde</p>
+      </div>
+      <div class="cert-card">
+        <svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 11c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4z"/></svg>
+        <h3>Certidão de Pessoa com Deficiência</h3>
+        <p>INSS</p>
+      </div>
+    </div>
+
+    <!-- ASSINAR DOCUMENTOS -->
+    <div class="page" id="p-assinar">
+      <button class="xbtn">✕</button>
+      <h1>Assinar documentos</h1>
+      <p class="sub">Assine documentos digitalmente com sua conta gov.br de forma segura e com validade jurídica.</p>
+      <a class="outline-btn" href="#">
+        Acessar assinatura eletrônica
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#1351B4"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+      </a>
+    </div>
+
+    <!-- AGENDA GOVBR -->
+    <div class="page" id="p-agenda">
+      <button class="xbtn">✕</button>
+      <h1>Agenda GovBR</h1>
+      <p class="sub">Calendário dos principais serviços públicos do Brasil.</p>
+      <div class="cal-nav">
+        <button>&#8249;</button>
+        <span>Junho De 2026</span>
+        <button>&#8250;</button>
+      </div>
+      <hr class="divider"/>
+      <div class="ag-card">
+        <div class="ag-dates">
+          <span>9 OUT</span>
+          <div class="sep"></div>
+          <span>30 AGO</span>
+        </div>
+        <div class="ag-info">
+          <h3>Parcelamento Excepcional 2025</h3>
+          <p>Aderir ao Parcelamento Excepcional de Municípios e Consórcios Intermunicipais (PEM)</p>
+        </div>
+      </div>
+      <a class="link-btn" href="#">
+        Ver agenda
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="#1351B4"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+      </a>
+    </div>
+
+    <!-- PROCURAÇÕES -->
+    <div class="page" id="p-procuracoes">
+      <button class="xbtn">✕</button>
+      <h1>Procurações Eletrônicas</h1>
+      <p class="sub">Visualize as procurações que você emitiu como outorgante (representado) e aquelas que foram emitidas para você como procurador.</p>
+      <a class="outline-btn" href="#">
+        Visualizar procurações
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#1351B4"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+      </a>
+    </div>
+
+    <!-- SISTEMAS -->
+    <div class="page" id="p-sistemas">
+      <button class="xbtn">✕</button>
+      <h1>Sistemas e Aplicativos</h1>
+      <p class="sub">Acesse os sistemas e aplicativos disponíveis no portal gov.br.</p>
+      <a class="outline-btn" href="#">
+        Ver todos os sistemas
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#1351B4"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+      </a>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- LIGHTBOX -->
+  <div class="lb" id="lb" onclick="closeLb()">
+    <div class="lb-box" onclick="event.stopPropagation()">
+      <button class="lb-x" onclick="closeLb()">✕</button>
+      <img id="lb-img" src="" alt=""/>
     </div>
   </div>
 
-</div>
-
-<!-- FORGIVENESS POPUP -->
-<div class="popup-overlay" id="forgivenessPopup">
-  <div class="popup">
-    <div class="popup-emoji">⚖️</div>
-    <div class="popup-title">A BARRA DE PERDAO ESTA CHEIA</div>
-    <div class="popup-sub">Voce perdoou ele?!</div>
-    <div class="popup-buttons">
-      <button class="popup-btn btn-yes" onclick="forgive(true)">SIM, PERDOEI</button>
-      <button class="popup-btn btn-no" onclick="forgive(false)">NAO AINDA</button>
-    </div>
-  </div>
-</div>
-
-<!-- FORGIVEN SCREEN -->
-<div class="forgiven-overlay" id="forgivenScreen">
-  <canvas class="confetti" id="confettiCanvas"></canvas>
-  <div class="forgiven-box">
-    <div style="font-size:5rem">💚</div>
-    <div class="forgiven-title">PERDOADO!</div>
-    <div class="forgiven-sub">Tom sobreviveu ao julgamento da Nicoly</div>
-  </div>
-</div>
+</div><!-- /phone -->
 
 <script>
-  let score = 0;
-  let barValue = 0;
-  let selectedEmoji = '👡';
-  const HITS_TO_FILL = 20;
-  const privileges = [
-    { id: 'priv0', threshold: 0.3 },
-    { id: 'priv1', threshold: 0.6 },
-    { id: 'priv2', threshold: 0.85 },
-  ];
+const SB_URL = 'https://ftwcrdbnbefphnbxpqzv.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ0d2NyZGJuYmVmcGhuYnhwcXp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2NzM0NTUsImV4cCI6MjA5NjI0OTQ1NX0.h3_492SODOXILnoPlL3LMOk2j5c1hlK0045ilIiOi8I';
+const sb = supabase.createClient(SB_URL, SB_KEY);
+const BUCKET = 'documentos';
 
-  const sounds = {
-    chinela: () => playSound(300, 0.1, 'sawtooth'),
-    colher: () => playSound(600, 0.08, 'square'),
-    rolo: () => playSound(150, 0.15, 'sine'),
-    travesseiro: () => playSound(200, 0.05, 'sine'),
-    vassoura: () => playSound(400, 0.1, 'sawtooth'),
-  };
+const PAGES = ['caixa','carteira','certidoes','assinar','agenda','procuracoes','sistemas'];
 
-  let currentWeapon = 'chinela';
+function go(id) {
+  PAGES.forEach(p => {
+    document.getElementById('p-'+p).classList.remove('on');
+    document.getElementById('n-'+p).classList.remove('on');
+  });
+  document.getElementById('p-'+id).classList.add('on');
+  document.getElementById('n-'+id).classList.add('on');
+}
 
-  function selectWeapon(btn) {
-    document.querySelectorAll('.weapon-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    currentWeapon = btn.dataset.weapon;
-    selectedEmoji = btn.dataset.emoji;
-    document.getElementById('hitBtn').textContent = 'BATER EM TOM';
-  }
+// Restaura imagens salvas
+window.addEventListener('load', () => {
+  ['frente','verso'].forEach(s => {
+    const url = localStorage.getItem('img_'+s);
+    if (url) showImg(s, url);
+  });
+});
 
-  function doHit() {
-    score++;
-    document.getElementById('scoreNum').textContent = score;
+async function upload(e, side) {
+  const file = e.target.files[0];
+  if (!file) return;
+  msg(side, 'Enviando...');
 
-    barValue = Math.min(1, barValue + (1 / HITS_TO_FILL));
-    updateBar();
-    updatePrivileges();
+  const old = localStorage.getItem('fname_'+side);
+  if (old) await sb.storage.from(BUCKET).remove([old]);
 
-    // shake
-    const card = document.getElementById('victimCard');
-    card.classList.remove('shake');
-    void card.offsetWidth;
-    card.classList.add('shake');
+  const ext = file.name.split('.').pop();
+  const fname = side+'_'+Date.now()+'.'+ext;
+  const {error} = await sb.storage.from(BUCKET).upload(fname, file, {cacheControl:'3600', upsert:false});
+  if (error) { msg(side,'Erro: '+error.message); return; }
 
-    // hit effect
-    const fx = document.getElementById('hitEffect');
-    fx.textContent = selectedEmoji;
-    fx.classList.remove('show');
-    void fx.offsetWidth;
-    fx.classList.add('show');
+  const {data} = sb.storage.from(BUCKET).getPublicUrl(fname);
+  localStorage.setItem('img_'+side, data.publicUrl);
+  localStorage.setItem('fname_'+side, fname);
+  showImg(side, data.publicUrl);
+  msg(side,'Salvo!');
+  setTimeout(()=>msg(side,''), 2000);
+}
 
-    // sound
-    if (sounds[currentWeapon]) sounds[currentWeapon]();
+function showImg(side, url) {
+  document.getElementById('dz-'+side).style.display = 'none';
+  document.getElementById('im-'+side).src = url;
+  document.getElementById('iw-'+side).style.display = 'flex';
+}
 
-    // check full
-    if (barValue >= 1) {
-      setTimeout(() => {
-        document.getElementById('forgivenessPopup').classList.add('show');
-      }, 500);
-    }
-  }
+async function removeDoc(side) {
+  const fname = localStorage.getItem('fname_'+side);
+  if (fname) await sb.storage.from(BUCKET).remove([fname]);
+  localStorage.removeItem('img_'+side);
+  localStorage.removeItem('fname_'+side);
+  document.getElementById('iw-'+side).style.display = 'none';
+  document.getElementById('dz-'+side).style.display = 'flex';
+  document.getElementById('fi-'+side).value = '';
+  msg(side,'');
+}
 
-  function updateBar() {
-    const pct = Math.round(barValue * 100);
-    document.getElementById('barFill').style.width = pct + '%';
-    document.getElementById('barPct').textContent = pct + '%';
-  }
+function msg(side, t) { document.getElementById('sm-'+side).textContent = t; }
 
-  function updatePrivileges() {
-    privileges.forEach(p => {
-      if (barValue >= p.threshold) {
-        document.getElementById(p.id).classList.add('revoked');
-      }
-    });
-  }
-
-  function forgive(yes) {
-    document.getElementById('forgivenessPopup').classList.remove('show');
-    if (yes) {
-      setTimeout(() => {
-        document.getElementById('forgivenScreen').classList.add('show');
-        launchConfetti();
-      }, 300);
-    } else {
-      // reset bar
-      barValue = 0;
-      updateBar();
-      // restore privileges
-      privileges.forEach(p => {
-        document.getElementById(p.id).classList.remove('revoked');
-      });
-    }
-  }
-
-  // --- CONFETTI ---
-  function launchConfetti() {
-    const canvas = document.getElementById('confettiCanvas');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const ctx = canvas.getContext('2d');
-    const pieces = Array.from({length: 120}, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height - canvas.height,
-      r: Math.random() * 8 + 4,
-      color: ['#e63946','#2ecc71','#c9a84c','#3498db','#fff'][Math.floor(Math.random()*5)],
-      speed: Math.random() * 4 + 2,
-      spin: Math.random() * 0.2 - 0.1,
-      angle: Math.random() * Math.PI * 2,
-    }));
-
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      pieces.forEach(p => {
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.angle);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r);
-        ctx.restore();
-        p.y += p.speed;
-        p.angle += p.spin;
-        if (p.y > canvas.height) p.y = -10;
-      });
-      requestAnimationFrame(draw);
-    }
-    draw();
-  }
-
-  // --- SIMPLE SOUND ---
-  function playSound(freq, dur, type) {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.value = freq;
-      o.type = type;
-      g.gain.setValueAtTime(0.3, ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-      o.start(); o.stop(ctx.currentTime + dur);
-    } catch(e) {}
-  }
+function openLb(src) {
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lb').classList.add('on');
+}
+function closeLb() { document.getElementById('lb').classList.remove('on'); }
 </script>
 </body>
 </html>
