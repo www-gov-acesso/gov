@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GOV.BR - Serviços e Informações do Brasil</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Rawline', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;background:#f5f5f5;display:flex;justify-content:center;min-height:100vh;}
+.phone{width:100%;max-width:600px;min-height:100vh;background:#fff;display:flex;flex-direction:column;}
+
+/* BARRA SUPERIOR */
+.top-bar{background:#5E5E5E;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;min-height:48px;}
+.govbr-logo{display:flex;align-items:center;gap:12px;}
+.govbr-logo svg{height:24px;}
+.top-icons{display:flex;align-items:center;gap:12px;}
+.top-icon{width:32px;height:32px;border-radius:50%;background:transparent;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;}
+.top-icon svg{width:18px;height:18px;fill:#fff;}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:#ccc;border:none;cursor:pointer;}
+
+/* MENU PRINCIPAL */
+.main-menu{background:#fff;border-bottom:1px solid #dedede;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+.menu-icon{width:20px;height:20px;}
+.menu-icon svg{width:100%;height:100%;fill:#1351b4;}
+.menu-text{font-size:15px;color:#333;font-weight:400;}
+
+/* BUSCA */
+.search-box{padding:16px;background:#fff;}
+.search-input-wrap{display:flex;align-items:center;border:1px solid #ccc;border-radius:8px;padding:12px 16px;background:#fff;}
+.search-input-wrap input{flex:1;border:none;outline:none;font-size:15px;color:#333;}
+.search-input-wrap input::placeholder{color:#999;font-style:italic;}
+.search-icon{width:24px;height:24px;}
+.search-icon svg{width:100%;height:100%;fill:#1351b4;}
+
+/* CONTEÚDO */
+.content{flex:1;overflow-y:auto;background:#fff;}
+.page-title{text-align:center;font-size:24px;font-weight:600;color:#333;padding:24px 16px 16px;line-height:1.3;}
+
+/* SEÇÃO */
+.section-header{display:flex;align-items:center;justify-content:center;gap:8px;padding:20px 16px 12px;border-top:1px solid #e6e6e6;border-bottom:1px solid #e6e6e6;background:#fafafa;}
+.section-icon{width:20px;height:20px;}
+.section-icon svg{width:100%;height:100%;fill:#333;}
+.section-title{font-size:13px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:0.5px;}
+
+/* LISTA DE SERVIÇOS */
+.service-list{padding:0;}
+.service-item{display:flex;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:background .2s;}
+.service-item:hover{background:#f8f8f8;}
+.service-num{font-size:18px;font-weight:600;color:#c8c8c8;min-width:24px;}
+.service-name{font-size:15px;color:#1351b4;font-weight:500;line-height:1.4;}
+.service-badge{margin-left:auto;background:#1351b4;color:#fff;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:700;}
+.service-badge svg{width:16px;height:16px;fill:#fff;}
+
+/* DESTAQUE */
+.destaque-section{padding:16px;background:#fff;}
+.destaque-label{display:flex;align-items:center;justify-content:center;gap:8px;padding:16px 0;border-top:1px solid #e6e6e6;border-bottom:1px solid #e6e6e6;background:#fafafa;margin:0 -16px 16px;}
+.destaque-icon{width:18px;height:18px;}
+.destaque-icon svg{width:100%;height:100%;fill:#333;}
+.destaque-title{font-size:13px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:0.5px;}
+.destaque-card{background:#f8f8f8;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;}
+.destaque-card:hover{background:#f0f0f0;}
+.destaque-category{font-size:12px;color:#666;margin-bottom:6px;font-weight:600;}
+.destaque-text{font-size:14px;color:#333;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="phone">
+  
+  <!-- BARRA SUPERIOR -->
+  <div class="top-bar">
+    <div class="govbr-logo">
+      <svg viewBox="0 0 80 24" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="18" font-family="Arial, sans-serif" font-size="18" font-weight="700">
+          <tspan fill="#0073e6">g</tspan>
+          <tspan fill="#17a2b8">o</tspan>
+          <tspan fill="#ffc107">v</tspan>
+          <tspan fill="#ffffff">.</tspan>
+          <tspan fill="#28a745">b</tspan>
+          <tspan fill="#0073e6">r</tspan>
+        </text>
+      </svg>
+      <button class="top-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="18" r="1.5"/></svg>
+      </button>
+    </div>
+    <div class="top-icons">
+      <button class="top-icon" title="Idioma">
+        <svg viewBox="0 0 24 24"><text x="4" y="16" font-size="10" fill="#fff" font-weight="700">PT</text><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="none" stroke="#fff" stroke-width="1.5"/></svg>
+      </button>
+      <button class="top-icon" title="Acessibilidade">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="2" fill="#fff"/><path d="M12 9c-3 0-5 1-5 3v8h2v-6h2v6h2v-6h2v6h2v-8c0-2-2-3-5-3z" fill="#fff"/></svg>
+      </button>
+      <button class="top-icon" title="Contraste">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18V4c4.41 0 8 3.59 8 8s-3.59 8-8 8z" fill="#fff"/></svg>
+      </button>
+      <button class="top-icon" title="Sistemas">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1" fill="#fff"/><rect x="14" y="3" width="7" height="7" rx="1" fill="#fff"/><rect x="3" y="14" width="7" height="7" rx="1" fill="#fff"/><rect x="14" y="14" width="7" height="7" rx="1" fill="#fff"/></svg>
+      </button>
+      <button class="user-avatar" title="Conta">
+        <svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="11" fill="#ccc"/><circle cx="12" cy="9" r="3" fill="#999"/><path d="M12 14c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z" fill="#999"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- MENU PRINCIPAL -->
+  <div class="main-menu">
+    <div class="menu-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </div>
+    <div class="menu-text">Serviços e Informações do Brasil</div>
+  </div>
+
+  <!-- BUSCA -->
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <input type="text" placeholder="O que você procura?"/>
+      <div class="search-icon">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <div class="content">
+    <h1 class="page-title">Serviços para você</h1>
+
+    <!-- MAIS ACESSADOS -->
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>
+      </div>
+      <div class="section-title">MAIS ACESSADOS</div>
+    </div>
+
+    <div class="service-list">
+      <div class="service-item">
+        <div class="service-num">1</div>
+        <div class="service-name">Entregar Meu Imposto de Renda</div>
+        <div class="service-badge">
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">2</div>
+        <div class="service-name">Consultar Meu Imposto de Renda</div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">3</div>
+        <div class="service-name">Assinatura Eletrônica</div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">4</div>
+        <div class="service-name">Consultar restituição do imposto de renda</div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">5</div>
+        <div class="service-name">Consultar dados do Cadastro Único</div>
+      </div>
+      <div class="service-item">
+        <div class="service-num">6</div>
+        <div class="service-name">Consultar CPF</div>
+      </div>
+    </div>
+
+    <!-- DESTAQUE -->
+    <div class="destaque-label">
+      <div class="destaque-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+      </div>
+      <div class="destaque-title">DESTAQUE</div>
+    </div>
+
+    <div class="destaque-section">
+      <div class="destaque-card">
+        <div class="destaque-category">Finanças, Impostos e Gestão Pública</div>
+        <div class="destaque-text">Consultar débitos e fazer parcelamento de dívidas com a União</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>

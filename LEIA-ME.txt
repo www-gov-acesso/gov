@@ -1,0 +1,127 @@
+═══════════════════════════════════════════════════════════
+    🇧🇷 PROJETO GOV.BR - INSTRUÇÕES DE USO
+═══════════════════════════════════════════════════════════
+
+⚠️  IMPORTANTE: NÃO ABRA O INDEX.HTML DIRETAMENTE!
+
+Você PRECISA usar um servidor local para o site funcionar.
+
+
+═══════════════════════════════════════════════════════════
+    🚀 COMO INICIAR (ESCOLHA UMA OPÇÃO)
+═══════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────┐
+│ OPÇÃO 1: Arquivo .bat (Mais fácil - Windows)           │
+└─────────────────────────────────────────────────────────┘
+
+1. Clique DUAS VEZES no arquivo:
+   ► start-server.bat
+
+2. Acesse no navegador:
+   ► http://localhost:8000
+
+
+┌─────────────────────────────────────────────────────────┐
+│ OPÇÃO 2: Python (Multiplataforma)                      │
+└─────────────────────────────────────────────────────────┘
+
+1. Abra o terminal/prompt NESTA PASTA
+
+2. Execute:
+   ► python server.py
+
+3. Acesse no navegador:
+   ► http://localhost:8000
+
+
+┌─────────────────────────────────────────────────────────┐
+│ OPÇÃO 3: Node.js (Se tiver instalado)                  │
+└─────────────────────────────────────────────────────────┘
+
+1. Abra o terminal/prompt NESTA PASTA
+
+2. Execute:
+   ► node server.js
+
+3. Acesse no navegador:
+   ► http://localhost:8000
+
+
+═══════════════════════════════════════════════════════════
+    🛑 PARA PARAR O SERVIDOR
+═══════════════════════════════════════════════════════════
+
+Pressione: Ctrl + C
+(ou feche a janela do terminal)
+
+
+═══════════════════════════════════════════════════════════
+    ❓ PROBLEMAS COMUNS
+═══════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────┐
+│ "Python não encontrado"                                 │
+└─────────────────────────────────────────────────────────┘
+
+Baixe e instale:
+► https://www.python.org/downloads/
+
+⚠️  Durante instalação, marque:
+   "Add Python to PATH"
+
+
+┌─────────────────────────────────────────────────────────┐
+│ "Porta 8000 já está em uso"                            │
+└─────────────────────────────────────────────────────────┘
+
+Feche outros programas na porta 8000
+OU
+Edite server.py e mude:
+   PORT = 8000  →  PORT = 8080
+
+
+┌─────────────────────────────────────────────────────────┐
+│ Página carrega mas sem estilo/imagens                   │
+└─────────────────────────────────────────────────────────┘
+
+Certifique-se de estar usando:
+► http://localhost:8000
+
+NÃO use:
+✗ file:///C:/Users/.../index.html
+✗ Abrir arquivo diretamente
+
+
+═══════════════════════════════════════════════════════════
+    ✨ FUNCIONALIDADES
+═══════════════════════════════════════════════════════════
+
+✓ Portal GOV.BR completo
+✓ Botão "Minha área" flutuante
+✓ Carteira de documentos digitais
+✓ Caixa postal de mensagens
+✓ Download de certidões
+✓ Assinatura de documentos
+✓ Agenda GovBR
+✓ Procurações eletrônicas
+✓ Sistemas e aplicativos
+✓ Dados cadastrais (salvo no Supabase)
+
+
+═══════════════════════════════════════════════════════════
+    📖 MAIS INFORMAÇÕES
+═══════════════════════════════════════════════════════════
+
+Veja o arquivo COMO-USAR.md para:
+• Guia completo de uso
+• Troubleshooting detalhado
+• Estrutura do projeto
+• Dicas e truques
+
+
+═══════════════════════════════════════════════════════════
+
+Desenvolvido para demonstração educacional 🇧🇷
+
+═══════════════════════════════════════════════════════════
